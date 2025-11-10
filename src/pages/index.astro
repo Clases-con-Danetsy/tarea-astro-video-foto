@@ -1,0 +1,112 @@
+﻿---
+import "../styles/global.css";
+---
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Presentación de Omar 🐱</title>
+  </head>
+
+  <body
+    class="bg-gradient-to-b from-gray-900 via-slate-900 to-gray-950 text-gray-100 min-h-screen flex flex-col items-center justify-center relative overflow-x-hidden font-sans"
+  >
+    <!-- Contenido principal -->
+    <main class="z-0 text-center px-4">
+      <img
+        src="/gatito.jpg"
+        alt="Mi gato Omar"
+        class="w-64 rounded-3xl shadow-2xl mx-auto border-4 border-amber-400/50"
+      />
+
+      <h1 class="mt-6 text-3xl font-semibold text-amber-400 drop-shadow-lg">
+        Hola, soy Omar 🐾
+      </h1>
+      <p class="mt-3 text-lg text-gray-300 max-w-md mx-auto leading-relaxed">
+        Tengo 5 años y soy un gatito muy travieso. ¡Dale al botón para conocerme mejor!
+      </p>
+
+      <button
+        id="verVideo"
+        class="mt-6 px-6 py-3 bg-amber-500 hover:bg-amber-600 rounded-xl text-white font-semibold shadow-lg transition-transform transform hover:scale-105"
+      >
+        Ver mi video 🎥
+      </button>
+    </main>
+
+    <!-- Fondo oscuro + modal -->
+    <div
+      id="overlay"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity"
+    >
+      <!-- Contenedor del video -->
+      <div
+        id="videoContainer"
+        class="relative w-[90%] max-w-md bg-slate-800 rounded-2xl shadow-2xl p-4 transform scale-95 opacity-0 transition-all duration-300"
+      >
+        <!-- Botón de cierre -->
+        <button
+          id="cerrarVideo"
+          class="absolute -top-4 -right-4 bg-amber-500 hover:bg-amber-600 text-white w-10 h-10 rounded-full flex items-center justify-center text-2xl font-bold shadow-xl border-2 border-white transition-transform hover:scale-110"
+        >
+          ✕
+        </button>
+
+        <!-- Video -->
+        <video
+          id="videoGato"
+          src="/video-gatito.mp4"
+          controls
+          class="w-full rounded-xl border-2 border-amber-400/60 shadow-lg"
+        ></video>
+      </div>
+    </div>
+
+    <!-- Script -->
+    <script is:inline>
+      const verVideoBtn = document.getElementById("verVideo");
+      const overlay = document.getElementById("overlay");
+      const videoContainer = document.getElementById("videoContainer");
+      const cerrarBtn = document.getElementById("cerrarVideo");
+      const video = document.getElementById("videoGato");
+
+      function abrirVideo() {
+        overlay.classList.remove("hidden");
+        requestAnimationFrame(() => {
+          videoContainer.classList.remove("scale-95", "opacity-0");
+          videoContainer.classList.add("scale-100", "opacity-100");
+        });
+        document.documentElement.style.overflow = "hidden";
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      }
+
+      function cerrarVideo() {
+        videoContainer.classList.remove("scale-100", "opacity-100");
+        videoContainer.classList.add("scale-95", "opacity-0");
+        setTimeout(() => {
+          overlay.classList.add("hidden");
+          document.documentElement.style.overflow = "";
+        }, 250);
+        video.pause();
+      }
+
+      verVideoBtn.addEventListener("click", abrirVideo);
+      cerrarBtn.addEventListener("click", cerrarVideo);
+
+      // Cerrar al hacer clic fuera del video
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) {
+          cerrarVideo();
+        }
+      });
+
+      // Cerrar con tecla Escape
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !overlay.classList.contains("hidden")) {
+          cerrarVideo();
+        }
+      });
+    </script>
+  </body>
+</html>
